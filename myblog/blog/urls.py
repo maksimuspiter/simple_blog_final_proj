@@ -12,4 +12,5 @@ urlpatterns = [
         views.PostDetailView.as_view(),
         name="single-post",
     ),
+    path('posts/<str:author_nickname>', views.PostListByPortfolioView.as_view(), name="posts-by-author")
 ]

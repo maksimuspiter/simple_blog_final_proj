@@ -10,7 +10,7 @@ def all_posts(request):
 
 class PostListView(ListView):
     paginate_by = 2
-    model = Post
+    queryset = Post.published.all()
     template_name = "blog/post/list.html"
     context_object_name = "posts"
 
@@ -24,3 +24,15 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["info"] = "hello world"
         return context
+
+
+class PostListByPortfolioView(ListView):
+    paginate_by = 2
+    template_name = "blog/post/list.html"
+    context_object_name = "posts"
+
+    # queryset = Post.published.filter
+
+    def get_queryset(self):
+        author = self.kwargs["author_nickname"]
+        return Post.published.filter(author__nickname=author)

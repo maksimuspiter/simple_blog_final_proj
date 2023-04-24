@@ -8,9 +8,9 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <!-- Post preview-->
                 <div class="post-preview">
-                    <a href="#">
+                    <a href="{{post.get_absolute_url}}">
                         <h2 class="post-title">{{post.title}}</h2>
-                        <h3 class="post-subtitle">{{post.body}}</h3>
+                        <h3 class="post-subtitle">{{post.body|truncatechars:255}}</h3>
                     </a>
                     <p class="post-meta">
                         Posted by

@@ -36,3 +36,9 @@ class PostListByPortfolioView(ListView):
     def get_queryset(self):
         author = self.kwargs["author_nickname"]
         return Post.published.filter(author__nickname=author)
+
+#TODO: add search by tags
+#TODO: search by categories
+#TODO: add comments after detail post 
+#TODO: add related posts
+#TODO: rating posts

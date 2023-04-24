@@ -103,3 +103,6 @@ class UserPortfolio(models.Model):
 
     def __str__(self):
         return f"Никнейм {self.nickname}, user_id {self.user.pk}"
+
+#TODO: add categories 
+#TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content 

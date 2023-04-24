@@ -18,7 +18,10 @@ class Post(models.Model):
     title = models.CharField(max_length=250, verbose_name="Заглавие")
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="blog_posts", verbose_name="Автор"
+        "UserPortfolio",
+        on_delete=models.CASCADE,
+        related_name="blog_posts",
+        verbose_name="Автор",
     )
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now, verbose_name="Дата публикации")
@@ -48,7 +51,15 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("blog:single-post", args=[self.id, self.slug])
+        return reverse(
+            "blog:single-post",
+            args=[
+                self.publish.year,
+                self.publish.month,
+                self.publish.day,
+                self.slug,
+            ],
+        )
 
 
 class Comment(models.Model):
@@ -72,3 +83,23 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Комментарий {self.name} на пост {self.post}"
+
+
+class UserPortfolio(models.Model):
+    user = models.ForeignKey(
+        User, related_name="portfolios", verbose_name="автор", on_delete=models.CASCADE
+    )
+    nickname = models.CharField(max_length=255, unique=True, verbose_name="Никнейм")
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    active = models.BooleanField(default=True, verbose_name="Активный")
+
+    class Meta:
+        ordering = ["created"]
+        indexes = [
+            models.Index(fields=["created"]),
+        ]
+        verbose_name = "Портфолио"
+        verbose_name_plural = "Портфолио"
+
+    def __str__(self):
+        return f"Никнейм {self.nickname}, user_id {self.user.pk}"

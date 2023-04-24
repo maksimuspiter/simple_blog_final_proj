@@ -9,7 +9,7 @@ def all_posts(request):
 
 
 class PostListView(ListView):
-    paginate_by = 1
+    paginate_by = 2
     model = Post
     template_name = "blog/post/list.html"
     context_object_name = "posts"

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, Comment, UserPortfolio
-from .forms import CreateUserPortfolio
+from .forms import CreateUserPortfolio, CreateUserPortfolio2
 
 
 def all_posts(request):
@@ -65,6 +65,16 @@ class CreatePortfolioView(LoginRequiredMixin, CreateView):
     #         # return reverse('blog:all-posts')
     #     return render(request, 'blog/portfolio/create.html', {'form': form})
 
+def create_portfolio(request):
+    if request.method == 'POST':
+        form = CreateUserPortfolio2(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            
+    else:
+        form = CreateUserPortfolio2()
+    
+    return render(request, 'blog/portfolio/create.html', {'form': form})
 
 # TODO: add search by tags
 # TODO: search by categories

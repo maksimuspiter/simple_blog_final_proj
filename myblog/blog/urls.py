@@ -14,5 +14,6 @@ urlpatterns = [
     ),
     path('posts/<str:author_nickname>', views.PostListByPortfolioView.as_view(), name="posts-by-author"),
     path("portfolio/create/", views.CreatePortfolioView.as_view(), name="portfolio-create"),
+    path("portfolio/create2/", views.create_portfolio, name="portfolio-create2"),
 
 ]

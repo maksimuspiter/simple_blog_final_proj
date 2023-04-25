@@ -9,3 +9,7 @@ class CreateUserPortfolio(ModelForm):
         # fields = ["user", "nickname"]
         fields = ["nickname"]
 
+
+class CreateUserPortfolio2(forms.Form):
+    nickname = forms.CharField(max_length=20, label="Никнейм", 
+                               label_suffix='exampleFormControlInput1')

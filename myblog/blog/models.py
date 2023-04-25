@@ -21,7 +21,7 @@ class Post(models.Model):
         "UserPortfolio",
         on_delete=models.CASCADE,
         related_name="blog_posts",
-        verbose_name="Автор",
+        verbose_name="Автор поста",
     )
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now, verbose_name="Дата публикации")
@@ -57,6 +57,7 @@ class Post(models.Model):
                 self.publish.year,
                 self.publish.month,
                 self.publish.day,
+                self.pk,
                 self.slug,
             ],
         )
@@ -66,8 +67,12 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="comments", verbose_name="Пост"
     )
-    name = models.CharField(max_length=80, verbose_name="Название")
-    email = models.EmailField()
+    author = models.ForeignKey(
+        "UserPortfolio",
+        on_delete=models.CASCADE,
+        related_name="blog_comments",
+        verbose_name="Автор комментария",
+    )
     body = models.TextField(verbose_name="Контент")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Последнее изменение")
@@ -82,12 +87,12 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
-        return f"Комментарий {self.name} на пост {self.post}"
+        return f"Комментарий {self.author.nickname} на пост {self.post}"
 
 
 class UserPortfolio(models.Model):
-    user = models.ForeignKey(
-        User, related_name="portfolios", verbose_name="автор", on_delete=models.CASCADE
+    user = models.OneToOneField(
+        User, related_name="portfolio", verbose_name="автор", on_delete=models.CASCADE
     )
     nickname = models.CharField(max_length=255, unique=True, verbose_name="Никнейм")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")

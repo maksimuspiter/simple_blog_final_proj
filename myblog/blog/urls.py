@@ -23,6 +23,11 @@ urlpatterns = [
         name="posts-by-author",
     ),
     path(
+        "posts/category/<str:category_slug>",
+        views.PostListByCategoryView.as_view(),
+        name="posts-by-category",
+    ),
+    path(
         "portfolio/create/",
         views.CreatePortfolioView.as_view(),
         name="portfolio-create",

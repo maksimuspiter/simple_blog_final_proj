@@ -10,6 +10,23 @@ class PublishedManager(models.Manager):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Название категории")
+    slug = models.SlugField(unique=True)
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            "blog:posts-by-category", args=[self.slug]
+        )
+
+
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = "DR", "Draft"
@@ -36,7 +53,7 @@ class Post(models.Model):
     # manager
     objects = models.Manager()
     published = PublishedManager()
-    # ManyToMany taggit
+    category = models.ForeignKey(Category, blank=True, null=True, related_name="posts", on_delete=models.SET_NULL)
     tags = TaggableManager()
 
     class Meta:
@@ -109,5 +126,6 @@ class UserPortfolio(models.Model):
     def __str__(self):
         return f"Никнейм {self.nickname}, user_id {self.user.pk}"
 
-#TODO: add categories 
-#TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content 
+
+# TODO: add categories
+# TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content

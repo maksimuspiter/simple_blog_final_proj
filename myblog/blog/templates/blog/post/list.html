@@ -18,6 +18,13 @@
                             {{post.author.nickname}}</a>
                         on {{post.publish}}
                     </p>
+                    {% if post.category %}
+
+                    <p class="post-meta">
+                        <a href="{{post.category.get_absolute_url}}">
+                            {{post.category.name}}</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <!-- Divider-->
                 <hr class="my-4" />

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Post, Comment, UserPortfolio
+from .models import Post, Comment, UserPortfolio, Category
 from .forms import CreateUserPortfolio, CreateUserPortfolio2, CreateCommentAfterPost
 
 
@@ -51,6 +51,15 @@ class PostListByPortfolioView(ListView):
     def get_queryset(self):
         author = self.kwargs["author_nickname"]
         return Post.published.filter(author__nickname=author)
+    
+class PostListByCategoryView(ListView):
+    paginate_by = 2
+    template_name = "blog/post/list.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        category_slug = self.kwargs["category_slug"]
+        return Post.published.filter(category__slug=category_slug)
 
 
 class CreatePortfolioView(LoginRequiredMixin, CreateView):
@@ -79,6 +88,5 @@ def create_portfolio(request):
 
 # TODO: add search by tags
 # TODO: search by categories
-# TODO: add comments after detail post
 # TODO: add related posts
 # TODO: rating posts

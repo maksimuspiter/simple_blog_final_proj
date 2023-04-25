@@ -3,11 +3,7 @@ from django.urls import reverse
 from django.views.generic import ListView
 
 from .models import Post, Comment, Category
-from portfolio.forms import (
-    CreateUserPortfolio,
-    CreateUserPortfolio2,
-    CreateCommentAfterPost,
-)
+from .forms import CreateCommentAfterPost
 
 
 def all_posts(request):

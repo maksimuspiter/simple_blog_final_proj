@@ -27,10 +27,4 @@ urlpatterns = [
         views.PostListByCategoryView.as_view(),
         name="posts-by-category",
     ),
-    path(
-        "portfolio/create/",
-        views.CreatePortfolioView.as_view(),
-        name="portfolio-create",
-    ),
-    path("portfolio/create2/", views.create_portfolio, name="portfolio-create2"),
 ]

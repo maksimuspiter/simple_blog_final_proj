@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from portfolio.models import UserPortfolio
 
 
 class PublishedManager(models.Manager):
@@ -22,9 +22,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(
-            "blog:posts-by-category", args=[self.slug]
-        )
+        return reverse("blog:posts-by-category", args=[self.slug])
 
 
 class Post(models.Model):
@@ -35,7 +33,7 @@ class Post(models.Model):
     title = models.CharField(max_length=250, verbose_name="Заглавие")
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(
-        "UserPortfolio",
+        UserPortfolio,
         on_delete=models.CASCADE,
         related_name="blog_posts",
         verbose_name="Автор поста",
@@ -53,7 +51,9 @@ class Post(models.Model):
     # manager
     objects = models.Manager()
     published = PublishedManager()
-    category = models.ForeignKey(Category, blank=True, null=True, related_name="posts", on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        Category, blank=True, null=True, related_name="posts", on_delete=models.SET_NULL
+    )
     tags = TaggableManager()
 
     class Meta:
@@ -85,7 +85,7 @@ class Comment(models.Model):
         Post, on_delete=models.CASCADE, related_name="comments", verbose_name="Пост"
     )
     author = models.ForeignKey(
-        "UserPortfolio",
+        UserPortfolio,
         on_delete=models.CASCADE,
         related_name="blog_comments",
         verbose_name="Автор комментария",
@@ -107,25 +107,8 @@ class Comment(models.Model):
         return f"Комментарий {self.author.nickname} на пост {self.post}"
 
 
-class UserPortfolio(models.Model):
-    user = models.OneToOneField(
-        User, related_name="portfolio", verbose_name="автор", on_delete=models.CASCADE
-    )
-    nickname = models.CharField(max_length=255, unique=True, verbose_name="Никнейм")
-    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    active = models.BooleanField(default=True, verbose_name="Активный")
-
-    class Meta:
-        ordering = ["created"]
-        indexes = [
-            models.Index(fields=["created"]),
-        ]
-        verbose_name = "Портфолио"
-        verbose_name_plural = "Портфолио"
-
-    def __str__(self):
-        return f"Никнейм {self.nickname}, user_id {self.user.pk}"
+# class Raiting(models.Model):
+#     user = models.ForeignKey(UserPortfolio, on_delete=models.CASCADE)
 
 
-# TODO: add categories
 # TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content

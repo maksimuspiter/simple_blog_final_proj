@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 
-from .models import Post, Comment, UserPortfolio, Category
-from .forms import CreateUserPortfolio, CreateUserPortfolio2, CreateCommentAfterPost
+from .models import Post, Comment, Category
+from portfolio.forms import (
+    CreateUserPortfolio,
+    CreateUserPortfolio2,
+    CreateCommentAfterPost,
+)
 
 
 def all_posts(request):
@@ -51,7 +54,8 @@ class PostListByPortfolioView(ListView):
     def get_queryset(self):
         author = self.kwargs["author_nickname"]
         return Post.published.filter(author__nickname=author)
-    
+
+
 class PostListByCategoryView(ListView):
     paginate_by = 2
     template_name = "blog/post/list.html"
@@ -62,31 +66,8 @@ class PostListByCategoryView(ListView):
         return Post.published.filter(category__slug=category_slug)
 
 
-class CreatePortfolioView(LoginRequiredMixin, CreateView):
-    template_name = "blog/portfolio/create.html"
-    form_class = CreateUserPortfolio
-    # success_url = "blog:all-posts"
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.user = self.request.user
-        obj.save()
-        return redirect("blog:all-posts")
-
-
-def create_portfolio(request):
-    if request.method == "POST":
-        form = CreateUserPortfolio2(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-
-    else:
-        form = CreateUserPortfolio2()
-
-    return render(request, "blog/portfolio/create.html", {"form": form})
-
-
 # TODO: add search by tags
 # TODO: search by categories
 # TODO: add related posts
 # TODO: rating posts
+# TODO: add authentication and authorization

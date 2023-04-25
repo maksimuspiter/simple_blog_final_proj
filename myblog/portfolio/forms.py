@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
 from .models import UserPortfolio
-from blog.models import Comment
 
 
 class CreateUserPortfolio(ModelForm):
@@ -16,12 +15,6 @@ class CreateUserPortfolio2(forms.Form):
     nickname = forms.CharField(
         max_length=20, label="Никнейм", label_suffix="exampleFormControlInput1"
     )
-
-
-class CreateCommentAfterPost(ModelForm):
-    class Meta:
-        model = Comment
-        fields = ["body"]
 
 
 class LoginForm(forms.Form):

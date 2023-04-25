@@ -1,15 +1,18 @@
-<div class="row d-flex justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-        <div class="card-body p-4">
+<div class="card-body p-4">
           {% if form %}
             <div class="form-outline mb-4">
 
               <form method="post">
                 {% csrf_token %}
+                <div>
+                    {{ form.body }}
+
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-info btn-lg">Save</button>
+                </div>
             
-                {{ form.as_div }}
-                <button type="submit" class="btn btn-primary">Save</button>
+               
 
             </form>
 
@@ -37,6 +40,3 @@
           </div>
           {% endfor %}{% endif%}
         </div>
-      </div>
-    </div>
-  </div>

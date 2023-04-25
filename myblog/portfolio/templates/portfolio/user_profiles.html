@@ -1,0 +1,87 @@
+{% extends 'base_index/base_index.html' %} 
+{% block MainContent%}
+
+<div class="row">
+  <div class="col-6">
+
+    <a href="#">
+      <img
+        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+        alt="Generic placeholder image"
+        class="img-fluid img-thumbnail">
+    </a>
+    <div class="d-flex justify-content-around text-center">
+      <div>
+        <h4>253</h4>
+        <p class="small text-muted mb-0">Photos</p>
+      </div>
+      <div>
+        <h4>253</h4>
+        <p class="small text-muted mb-0">Followers</p>
+      </div>
+      <div>
+        <h4>253</h4>
+        <p class="small text-muted mb-0">Following</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-6 text-center">
+    <div>
+      <h3 class="mb-0">{{author.nickname}}</h3>
+      {% if author.user.is_active %}
+      <strong class="d-inline-block mb-2 text-success">online</strong>
+      {% else %}
+      <strong class="d-inline-block mb-2 text-success">offline</strong>
+      {% endif %}
+
+    </div>
+    <div>
+      <h4>User profile descriptions</h4>
+      <p>Your online dating profile is the key to whether or not you’re going to have success finding what you’re looking for. No matter if you’re looking for love, marriage, casual dating, or just friendship—a great online dating profile decides your level of success.</p>
+    </div>
+
+  </div>
+</div>
+<hr>
+<div>
+
+{% if posts %}
+  {% for post in posts%}
+      <div class="container px-4 px-lg-5">
+          <div class="row gx-4 gx-lg-5 justify-content-center">
+              <div class="col-md-10 col-lg-8 col-xl-7">
+                  <!-- Post preview-->
+                  <div class="post-preview">
+                      <a href="{{post.get_absolute_url}}">
+                          <h2 class="post-title">{{post.title}}</h2>
+                          <h3 class="post-subtitle">{{post.body|truncatechars:255}}</h3>
+                      </a>
+                      <p class="post-meta">
+                          Posted by 
+                          <a href="{% url 'blog:posts-by-author' post.author.nickname %}">
+                              {{post.author.nickname}}</a>
+                          on {{post.publish}}
+                      </p>
+                      {% if post.category %}
+
+                      <p class="post-meta">
+                          <a href="{{post.category.get_absolute_url}}">
+                              {{post.category.name}}</a>
+                      </p>
+                      {% endif %}
+                  </div>
+                  <!-- Divider-->
+                  <hr class="my-4" />
+              </div>
+          </div>
+      </div>    
+  {% endfor %}
+  {% else %}
+      <h3 class="text-center">На стене пока нет ни одной записи</h3>
+  {% endif %}
+
+</div>
+
+{% endblock %}
+

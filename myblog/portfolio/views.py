@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from .models import UserPortfolio
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
+from blog.models import Post
 
 
 class CreatePortfolioView(LoginRequiredMixin, CreateView):
@@ -84,3 +85,16 @@ def registration(request):
     else:
         form = UserRegistrationForm()
     return render(request, "portfolio/register.html", {"form": form})
+
+
+def user_profile(request, nickname=None):
+    if not nickname:
+        author = get_object_or_404(UserPortfolio, user=request.user)
+    else:
+        author = get_object_or_404(UserPortfolio, nickname=nickname)
+
+    posts = Post.published.filter(author=author)
+
+    return render(
+        request, "portfolio/user_profiles.html", {"author": author, "posts": posts}
+    )

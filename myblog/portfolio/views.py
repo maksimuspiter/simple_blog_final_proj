@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from portfolio.forms import CreateUserPortfolio, CreateUserPortfolio2
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import UserPortfolio
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 
@@ -47,8 +47,7 @@ def user_login(request):
                     messages.add_message(
                         request, messages.SUCCESS, f"Добро пожаловать.{user.portfolio}"
                     )
-                    return HttpResponse(f"Добро пожаловать, {user.portfolio.nickname}")
-                    # return render(request, "blog/post/list.html", {"posts": posts})
+                    return redirect("blog:all-posts")
 
                 else:
                     return HttpResponse("Ваш аккаунт не активен")
@@ -57,6 +56,11 @@ def user_login(request):
     else:
         form = LoginForm()
     return render(request, "portfolio/login.html", {"form": form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect("blog:all-posts")
 
 
 def registration(request):

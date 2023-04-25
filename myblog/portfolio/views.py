@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CreatePortfolioView(LoginRequiredMixin, CreateView):
-    template_name = "blog/portfolio/create.html"
+    template_name = "portfolio/create.html"
     form_class = CreateUserPortfolio
     # success_url = "blog:all-posts"
 
@@ -26,4 +26,4 @@ def create_portfolio(request):
     else:
         form = CreateUserPortfolio2()
 
-    return render(request, "blog/portfolio/create.html", {"form": form})
+    return render(request, "portfolio/create.html", {"form": form})

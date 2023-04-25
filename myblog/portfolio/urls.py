@@ -10,4 +10,6 @@ urlpatterns = [
         name="portfolio-create",
     ),
     path("create2/", views.create_portfolio, name="portfolio-create2"),
+    path('registration/', views.registration, name='registration'),
+    path('login/', views.user_login, name='login')
 ]

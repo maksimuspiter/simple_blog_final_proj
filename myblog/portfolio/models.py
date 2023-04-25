@@ -9,6 +9,8 @@ class UserPortfolio(models.Model):
     nickname = models.CharField(max_length=255, unique=True, verbose_name="Никнейм")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     active = models.BooleanField(default=True, verbose_name="Активный")
+    avatar = models.ImageField(upload_to='users/avatar/%Y/%m/%d/',
+                              blank=True)
 
     class Meta:
         ordering = ["created"]

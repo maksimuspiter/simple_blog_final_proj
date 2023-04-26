@@ -35,15 +35,32 @@
                     </p>
                 </div>
 
-            dsds {{post.favorite.check_in_favorite }}        sadsda
+                <h4>votes {{post.votes.sum_rating}}</h4>
+                <span>likes: 
+                    <form action="{% url 'like_dislike:post_like' post.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            {{ post.votes.likes.count }}
+                    </button> 
+                    </form>
+                </span>
+                
+                <span>dislikes: 
+                        
+                    <form action="{% url 'like_dislike:post_dislike' post.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            {{ post.votes.dislikes.count }}
+                    </button> 
+                    </form> 
+                </span>
 
-            <form action="{% url 'blog:like-post' post.id %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.path }}">
-                <button type="submit" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Like
-            </button> 
-            </form>
+
+            
+
+
             </div>
             
         </div>
@@ -51,6 +68,8 @@
     </div>
 
 </div>
+
+
 {% include "blog/post/includes/comments_in_detail.html" %}
 
 

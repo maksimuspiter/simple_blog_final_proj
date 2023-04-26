@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from portfolio.forms import CreateUserPortfolio, CreateUserPortfolio2
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import UserPortfolio
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
@@ -85,6 +86,32 @@ def registration(request):
     else:
         form = UserRegistrationForm()
     return render(request, "portfolio/register.html", {"form": form})
+
+
+@login_required
+def edit_portfolio(request):
+    if request.method == "POST":
+        user_form = UserEditForm(instance=request.user, data=request.POST)
+        profile_form = ProfileEditForm(
+            instance=request.user.portfolio, data=request.POST
+        )
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Профиль успешно обновлен")
+            return redirect("portfolio:my-profile")
+        else:
+            messages.error(request, "Произошла ошибка при изменении данных профиля")
+    else:
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance=request.user.portfolio)
+
+    return render(
+        request,
+        "portfolio/edit_portfolio.html",
+        {"user_form": user_form, "profile_form": profile_form},
+    )
 
 
 def user_profile(request, nickname=None):

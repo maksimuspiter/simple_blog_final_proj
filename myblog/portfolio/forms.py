@@ -75,3 +75,10 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserPortfolio
         fields = ["nickname"]
+
+    def clean_nickname(self):
+        data = self.cleaned_data["nickname"]
+        qs = UserPortfolio.objects.exclude(id=self.instance.id).filter(nickname=data)
+        if qs.exists():
+            raise forms.ValidationError("Этот никнейм уже занят.")
+        return data

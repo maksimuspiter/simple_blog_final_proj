@@ -23,18 +23,18 @@ class LikeDislikeManager(models.Manager):
         # Забираем суммарный рейтинг
         return self.get_queryset().aggregate(Sum("vote")).get("vote__sum") or 0
 
-    def articles(self):
+    def posts(self):
         return (
             self.get_queryset()
-            .filter(content_type__model="article")
-            .order_by("-articles__pub_date")
+            .filter(content_type__model="post")
+            .order_by("-posts__published")
         )
 
     def comments(self):
         return (
             self.get_queryset()
             .filter(content_type__model="comment")
-            .order_by("-comments__pub_date")
+            .order_by("-comments__created")
         )
 
 

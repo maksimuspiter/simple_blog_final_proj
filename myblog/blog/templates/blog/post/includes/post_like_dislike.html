@@ -1,0 +1,41 @@
+<div class="d-flex justify-content-center text-center">
+    <span>likes 
+        <form action="{% url 'like_dislike:post_like' post.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit"
+
+            {% if post_like_check > 0  %}
+            class="btn btn-success"
+            {% else %}
+            class="btn btn-secondary"                    
+            {% endif %}
+
+            
+            
+            data-toggle="button" aria-pressed="false" autocomplete="off">
+                {{ post.votes.likes.count }}
+            </button> 
+        </form>
+
+    </span>
+    
+    <span>dislikes
+
+        <form action="{% url 'like_dislike:post_dislike' post.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit" 
+
+            {% if post_like_check < 0  %}
+            class="btn btn-danger"
+            {% else %}
+            class="btn btn-secondary"                    
+            {% endif %}
+
+            data-toggle="button" aria-pressed="false" autocomplete="off">
+                {{ post.votes.dislikes.count }}
+        </button> 
+        </form> 
+    </span>
+</div>

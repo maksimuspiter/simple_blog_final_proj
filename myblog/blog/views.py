@@ -3,10 +3,12 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 
 from .models import Post, Comment
 from .forms import CreateCommentAfterPost
 
+from like_dislike.models import LikeDislike
 
 # @require_http_methods(["POST"])
 # @login_required
@@ -18,6 +20,17 @@ from .forms import CreateCommentAfterPost
 
 def post_detail(request, *args, **kwargs):
     post = get_object_or_404(Post.published, slug=kwargs["slug"], pk=kwargs["pk"])
+    post_like_check = None
+    if post and request.user.is_authenticated:
+        post_like_check = LikeDislike.objects.filter(
+                content_type=ContentType.objects.get_for_model(post),
+                object_id=post.pk,
+                user=request.user.portfolio,
+            )
+        if post_like_check:
+            post_like_check = post_like_check.first().vote
+        else:
+            post_like_check = None
     comments = post.comments.all().filter(active=True)
     form = None
 
@@ -36,7 +49,7 @@ def post_detail(request, *args, **kwargs):
     return render(
         request,
         "blog/post/detail.html",
-        {"post": post, "comments": comments, "form": form},
+        {"post": post, "comments": comments, "form": form, 'post_like_check': post_like_check},
     )
 
 

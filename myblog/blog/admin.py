@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment, Category
+from .models import Post, Comment, Category, FavoritePost
 
 
 @admin.register(Post)
@@ -20,6 +20,10 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     ordering = ["name", "slug"]
 
+@admin.register(FavoritePost)
+class FavoritePostAdmin(admin.ModelAdmin):
+    list_display = ["post", "user"]
+    ordering = ["user", "post"]
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

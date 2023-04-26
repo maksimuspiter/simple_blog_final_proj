@@ -56,6 +56,8 @@ class Post(models.Model):
     )
     tags = TaggableManager()
 
+    likes = models.BigIntegerField(default=0, verbose_name="Количество лайков")
+
     class Meta:
         ordering = ["-publish"]
         indexes = [
@@ -78,6 +80,12 @@ class Post(models.Model):
                 self.slug,
             ],
         )
+
+    def add_like(self):
+        self.likes += 1
+
+    def remove_like(self):
+        self.likes -= 1
 
 
 class Comment(models.Model):
@@ -107,8 +115,31 @@ class Comment(models.Model):
         return f"Комментарий {self.author.nickname} на пост {self.post}"
 
 
-# class Raiting(models.Model):
-#     user = models.ForeignKey(UserPortfolio, on_delete=models.CASCADE)
+class FavoritePost(models.Model):
+    user = models.ForeignKey(
+        UserPortfolio,
+        related_name="favorite",
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+    )
+    post = models.ForeignKey(
+        Post,
+        related_name="favorite",
+        verbose_name="Понравившийся пост",
+        on_delete=models.CASCADE,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name="Дата добавления в избранное"
+    )
+
+    class Meta:
+        ordering = ["-created"]
+
+        verbose_name = "Понравившийся пост"
+        verbose_name_plural = "Понравившийся посты"
+
+    def __str__(self):
+        return f"{self.user.nickname}: {self.post.title}"
 
 
 # TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content

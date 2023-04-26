@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView
 
-from .models import Post, Comment, Category
+from .models import Post, Comment, FavoritePost
 from .forms import CreateCommentAfterPost
 
 
@@ -37,29 +37,38 @@ def post_detail(request, *args, **kwargs):
 
 class PostListView(ListView):
     paginate_by = 2
-    queryset = Post.published.all()
-    template_name = "blog/post/list.html"
-    context_object_name = "posts"
-
-
-class PostListByPortfolioView(ListView):
-    paginate_by = 2
     template_name = "blog/post/list.html"
     context_object_name = "posts"
 
     def get_queryset(self):
-        author = self.kwargs["author_nickname"]
-        return Post.published.filter(author__nickname=author)
+        author = self.kwargs.get("author_nickname", None)
+        if author:
+            return Post.published.filter(author__nickname=author)
+        category_slug = self.kwargs.get("category_slug", None)
+        if category_slug:
+            return Post.published.filter(category__slug=category_slug)
+
+        return Post.published.all()
 
 
-class PostListByCategoryView(ListView):
-    paginate_by = 2
-    template_name = "blog/post/list.html"
-    context_object_name = "posts"
+# class PostListByPortfolioView(ListView):
+#     paginate_by = 2
+#     template_name = "blog/post/list.html"
+#     context_object_name = "posts"
 
-    def get_queryset(self):
-        category_slug = self.kwargs["category_slug"]
-        return Post.published.filter(category__slug=category_slug)
+#     def get_queryset(self):
+#         author = self.kwargs["author_nickname"]
+#         return Post.published.filter(author__nickname=author)
+
+
+# class PostListByCategoryView(ListView):
+#     paginate_by = 2
+#     template_name = "blog/post/list.html"
+#     context_object_name = "posts"
+
+#     def get_queryset(self):
+#         category_slug = self.kwargs["category_slug"]
+#         return Post.published.filter(category__slug=category_slug)
 
 
 # TODO: add search by tags

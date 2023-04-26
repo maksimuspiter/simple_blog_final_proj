@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Comment, FavoritePost
 from .forms import CreateCommentAfterPost
 
 
+@require_http_methods(["POST"])
+@login_required
 def add_in_favorite(request, post_id):
-    FavoritePost.objects.create(user=request.user, post__id=post_id)
+    favorite_post, created = FavoritePost.objects.get_or_create(user=request.user.portfolio, post_id=post_id)
+    next = request.POST.get('next')
+    return redirect(next)
 
 
 def post_detail(request, *args, **kwargs):

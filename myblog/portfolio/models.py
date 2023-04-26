@@ -11,6 +11,8 @@ class UserPortfolio(models.Model):
     active = models.BooleanField(default=True, verbose_name="Активный")
     avatar = models.ImageField(upload_to="users/avatar/%Y/%m/%d/", blank=True)
 
+    friends = models.ManyToManyField("self", verbose_name="Друзья")
+
     class Meta:
         ordering = ["created"]
         indexes = [

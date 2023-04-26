@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("blog/", include("blog.urls", namespace="blog")),
     path("portfolio/", include("portfolio.urls", namespace="portfolio")),
+    path("like_dislike/", include("like_dislike.urls", namespace="like_dislike")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

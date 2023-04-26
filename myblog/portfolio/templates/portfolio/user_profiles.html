@@ -58,10 +58,7 @@
                           <h3 class="post-subtitle">{{post.body|truncatechars:255}}</h3>
                       </a>
                       <p class="post-meta">
-                          Posted by 
-                          <a href="{% url 'blog:posts-by-author' post.author.nickname %}">
-                              {{post.author.nickname}}</a>
-                          on {{post.publish}}
+                          {{post.publish}}
                       </p>
                       {% if post.category %}
 

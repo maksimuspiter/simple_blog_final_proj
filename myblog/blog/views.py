@@ -6,9 +6,8 @@ from .models import Post, Comment, FavoritePost
 from .forms import CreateCommentAfterPost
 
 
-def all_posts(request):
-    posts = Post.objects.all()
-    return render(request, "blog/post/list.html", {"posts": posts})
+def add_in_favorite(request, post_id):
+    FavoritePost.objects.create(user=request.user, post__id=post_id)
 
 
 def post_detail(request, *args, **kwargs):
@@ -49,26 +48,6 @@ class PostListView(ListView):
             return Post.published.filter(category__slug=category_slug)
 
         return Post.published.all()
-
-
-# class PostListByPortfolioView(ListView):
-#     paginate_by = 2
-#     template_name = "blog/post/list.html"
-#     context_object_name = "posts"
-
-#     def get_queryset(self):
-#         author = self.kwargs["author_nickname"]
-#         return Post.published.filter(author__nickname=author)
-
-
-# class PostListByCategoryView(ListView):
-#     paginate_by = 2
-#     template_name = "blog/post/list.html"
-#     context_object_name = "posts"
-
-#     def get_queryset(self):
-#         category_slug = self.kwargs["category_slug"]
-#         return Post.published.filter(category__slug=category_slug)
 
 
 # TODO: add search by tags

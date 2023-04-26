@@ -120,11 +120,6 @@
               
           </ul>
           </div>
-          {% else %}
-              <div class="text-center">
-                <a class="dropdown-item" href="{% url 'portfolio:login' %}">Войти</a>
-              </div>
-          {% endif %}
           <hr>
 
             <div>
@@ -157,6 +152,14 @@
                 Друзья
                 </a>
             </div>
+            {% else %}
+                <div class="text-center">
+                  <a class="dropdown-item" href="{% url 'portfolio:login' %}">Войти</a>
+                </div>
+                <div class="text-center">
+                  <a class="dropdown-item" href="{% url 'portfolio:registration' %}">Регистрация</a>
+                </div>
+            {% endif %}
         </div>
         <div class="col-8">
           <!-- Main Content-->      

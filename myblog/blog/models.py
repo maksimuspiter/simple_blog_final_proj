@@ -84,12 +84,6 @@ class Post(models.Model):
             ],
         )
 
-    def add_like(self):
-        self.likes += 1
-
-    def remove_like(self):
-        self.likes -= 1
-
 
 class Comment(models.Model):
     post = models.ForeignKey(

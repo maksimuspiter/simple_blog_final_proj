@@ -22,4 +22,4 @@ class UserPortfolio(models.Model):
         verbose_name_plural = "Портфолио"
 
     def __str__(self):
-        return f"Никнейм {self.nickname}, user_id {self.user.pk}"
+        return f"{self.nickname} (user_id: {self.user.pk})"

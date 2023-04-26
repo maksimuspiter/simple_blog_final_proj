@@ -4,16 +4,16 @@ from django.views.generic import ListView
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 
-from .models import Post, Comment, FavoritePost
+from .models import Post, Comment
 from .forms import CreateCommentAfterPost
 
 
-@require_http_methods(["POST"])
-@login_required
-def add_in_favorite(request, post_id):
-    favorite_post, created = FavoritePost.objects.get_or_create(user=request.user.portfolio, post_id=post_id)
-    next = request.POST.get('next')
-    return redirect(next)
+# @require_http_methods(["POST"])
+# @login_required
+# def add_in_favorite(request, post_id):
+#     favorite_post, created = FavoritePost.objects.get_or_create(user=request.user.portfolio, post_id=post_id)
+#     next = request.POST.get('next')
+#     return redirect(next)
 
 
 def post_detail(request, *args, **kwargs):

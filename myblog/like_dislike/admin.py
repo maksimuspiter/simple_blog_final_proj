@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import LikeDislike
 
-# Register your models here.
+
+@admin.register(LikeDislike)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["vote", "user", "content_object", "objects"]

@@ -1,8 +1,11 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericRelation
 from taggit.managers import TaggableManager
+
 from portfolio.models import UserPortfolio
+from like_dislike.models import LikeDislike
 
 
 class PublishedManager(models.Manager):
@@ -56,7 +59,7 @@ class Post(models.Model):
     )
     tags = TaggableManager()
 
-    likes = models.BigIntegerField(default=0, verbose_name="Количество лайков")
+    votes = GenericRelation(LikeDislike, related_query_name="posts")
 
     class Meta:
         ordering = ["-publish"]
@@ -103,6 +106,8 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name="Последнее изменение")
     active = models.BooleanField(default=True, verbose_name="Активный")
 
+    votes = GenericRelation(LikeDislike, related_query_name="comments")
+
     class Meta:
         ordering = ["created"]
         indexes = [
@@ -113,33 +118,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Комментарий {self.author.nickname} на пост {self.post}"
-
-
-class FavoritePost(models.Model):
-    user = models.ForeignKey(
-        UserPortfolio,
-        related_name="favorite",
-        verbose_name="Пользователь",
-        on_delete=models.CASCADE,
-    )
-    post = models.ForeignKey(
-        Post,
-        related_name="favorite",
-        verbose_name="Понравившийся пост",
-        on_delete=models.CASCADE,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата добавления в избранное"
-    )
-
-    class Meta:
-        ordering = ["-created"]
-
-        verbose_name = "Понравившийся пост"
-        verbose_name_plural = "Понравившийся посты"
-
-    def __str__(self):
-        return f"{self.user.nickname}: {self.post.title}"
 
 
 # TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content

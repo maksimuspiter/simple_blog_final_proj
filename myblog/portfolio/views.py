@@ -91,7 +91,7 @@ def user_profile(request, nickname=None):
     if not nickname:
         author = get_object_or_404(UserPortfolio, user=request.user)
     else:
-        author = get_object_or_404(UserPortfolio, nickname=nickname)
+        author = get_object_or_404(UserPortfolio, nickname=nickname, active=True)
 
     posts = Post.published.filter(author=author)
 

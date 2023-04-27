@@ -1,4 +1,7 @@
 {% load blog_extras %}
+
+      
+
 <div class="card-body p-4">
           {% if form %}
             <div class="form-outline mb-4">
@@ -33,8 +36,7 @@
                 </div>
 
                 
-                  <div class="d-flex flex-row align-items-start">
-                    Like
+                  <div class="d-flex align-items-center flex-column">
                     <form action="{% url 'like_dislike:comment_like' comment.id %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.path }}">
@@ -43,18 +45,15 @@
                               {% if user_ckeck_comments_by_like_dislike|get_item:comment.id > 0 %}
                                 class="btn btn-success"
                               {% else %}
-                                class="btn btn-secondary"
+                                class="btn btn-outline-success"
                               {% endif %}
 
                             {% else %}
-                              class="btn btn-secondary"
+                              class="btn btn-outline-success"
                             {% endif %}
-                          >
-                          {{ comment.votes.likes.count  }}
-                        </button> 
+                          >+</button> 
                     </form> 
-
-                    Dislike
+                    <div>{{comment.raiting}}</div>
                     <form action="{% url 'like_dislike:comment_dislike' comment.id %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.path }}">
@@ -63,18 +62,29 @@
                             {% if user_ckeck_comments_by_like_dislike|get_item:comment.id < 0 %}
                               class="btn btn-danger"
                             {% else %}
-                              class="btn btn-secondary"
+                              class="btn btn-outline-danger"
                             {% endif %}
 
                           {% else %}
-                            class="btn btn-secondary"
+                            class="btn btn-outline-danger"
                           {% endif %}
-                        >
-                          {{ comment.votes.dislikes.count  }}
-                        </button> 
+                        >-</button> 
                     </form> 
 
                   </div>
+
+
+                  <!-- <div>
+                    <div class="d-flex align-items-center flex-column">
+                        <button type="button" class="btn btn-success">Success</button>
+                        <button type="button" class="btn btn-outline-success">Success</button>
+                  
+                        456
+                  
+                        <button type="button" class="btn btn-outline-danger">Danger</button>
+                        <button type="button" class="btn btn-danger">Danger</button>
+                    </div>
+                  </div> -->
 
 
               </div>
@@ -82,20 +92,3 @@
           </div>
           {% endfor %}{% endif%}
         </div>
-
-
-        <!-- <form action="{% url 'like_dislike:post_dislike' post.id %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.path }}">
-          <button type="submit" 
-
-          {% if post_like_check < 0  %}
-          class="btn btn-danger"
-          {% else %}
-          class="btn btn-secondary"                    
-          {% endif %}
-
-          data-toggle="button" aria-pressed="false" autocomplete="off">
-              {{ post.votes.dislikes.count }}
-      </button> 
-      </form>  -->

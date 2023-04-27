@@ -87,6 +87,16 @@ class PostListView(ListView):
 
         return Post.published.all()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_ckeck_posts_by_like_dislike = None
+        if self.request.user.is_authenticated:
+            user_ckeck_posts_by_like_dislike = check_like_dislike_from_queryset(
+                self.request.user.portfolio, self.get_queryset()
+            )
+        context["user_ckeck_posts_by_like_dislike"] = user_ckeck_posts_by_like_dislike
+        return context
+
 
 # TODO: add search by tags
 # TODO: search by categories

@@ -1,3 +1,4 @@
+{% load blog_extras %}
 <div class="card-body p-4">
           {% if form %}
             <div class="form-outline mb-4">
@@ -30,13 +31,71 @@
                     height="25" />
                   <p class="small mb-0 ms-2">{{comment.author.nickname}}</p>
                 </div>
-                <div class="d-flex flex-row align-items-center">
-                  <p class="small text-muted mb-0">Upvote?</p>
-                  <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                  <p class="small text-muted mb-0">3</p>
-                </div>
+
+                
+                  <div class="d-flex flex-row align-items-start">
+                    Like
+                    <form action="{% url 'like_dislike:comment_like' comment.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" 
+                            {% if comment.id in user_ckeck_comments_by_like_dislike %}
+                              {% if user_ckeck_comments_by_like_dislike|get_item:comment.id > 0 %}
+                                class="btn btn-success"
+                              {% else %}
+                                class="btn btn-secondary"
+                              {% endif %}
+
+                            {% else %}
+                              class="btn btn-secondary"
+                            {% endif %}
+                          >
+                          {{ comment.votes.likes.count  }}
+                        </button> 
+                    </form> 
+
+                    Dislike
+                    <form action="{% url 'like_dislike:comment_dislike' comment.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" 
+                          {% if comment.id in user_ckeck_comments_by_like_dislike %}
+                            {% if user_ckeck_comments_by_like_dislike|get_item:comment.id < 0 %}
+                              class="btn btn-danger"
+                            {% else %}
+                              class="btn btn-secondary"
+                            {% endif %}
+
+                          {% else %}
+                            class="btn btn-secondary"
+                          {% endif %}
+                        >
+                          {{ comment.votes.dislikes.count  }}
+                        </button> 
+                    </form> 
+
+                  </div>
+
+
               </div>
             </div>
           </div>
           {% endfor %}{% endif%}
         </div>
+
+
+        <!-- <form action="{% url 'like_dislike:post_dislike' post.id %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" 
+
+          {% if post_like_check < 0  %}
+          class="btn btn-danger"
+          {% else %}
+          class="btn btn-secondary"                    
+          {% endif %}
+
+          data-toggle="button" aria-pressed="false" autocomplete="off">
+              {{ post.votes.dislikes.count }}
+      </button> 
+      </form>  -->

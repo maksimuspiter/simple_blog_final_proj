@@ -35,15 +35,7 @@
                     </p>
                 </div>
 
-            dsds {{post.favorite.check_in_favorite }}        sadsda
-
-            <form action="{% url 'blog:like-post' post.id %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.path }}">
-                <button type="submit" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Like
-            </button> 
-            </form>
+                {% include "blog/post/includes/post_like_dislike.html" %}
             </div>
             
         </div>
@@ -51,6 +43,8 @@
     </div>
 
 </div>
+
+
 {% include "blog/post/includes/comments_in_detail.html" %}
 
 

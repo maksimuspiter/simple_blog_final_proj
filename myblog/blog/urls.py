@@ -20,5 +20,4 @@ urlpatterns = [
         views.post_detail,
         name="single-post",
     ),
-    path("like/<int:post_id>/", views.add_in_favorite, name="like-post"),
 ]

@@ -60,6 +60,11 @@ class Post(models.Model):
     tags = TaggableManager()
 
     votes = GenericRelation(LikeDislike, related_query_name="posts")
+    raiting = models.BigIntegerField(
+        default=0,
+        verbose_name="Рейтинг",
+        help_text="Это поле обнавляется раз в промежуток времени",
+    )
 
     class Meta:
         ordering = ["-publish"]
@@ -101,6 +106,11 @@ class Comment(models.Model):
     active = models.BooleanField(default=True, verbose_name="Активный")
 
     votes = GenericRelation(LikeDislike, related_query_name="comments")
+    raiting = models.BigIntegerField(
+        default=0,
+        verbose_name="Рейтинг",
+        help_text="Это поле обнавляется раз в промежуток времени",
+    )
 
     class Meta:
         ordering = ["created"]

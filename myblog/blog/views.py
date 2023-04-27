@@ -1,50 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.urls import reverse
 from django.views.generic import ListView
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.contenttypes.models import ContentType
 
 from .models import Post, Comment
 from .forms import CreateCommentAfterPost
-from like_dislike.models import LikeDislike
-
-
-def check_like_dislike(user, obj):
-    obj_like_check = LikeDislike.objects.filter(
-        content_type=ContentType.objects.get_for_model(obj),
-        object_id=obj.pk,
-        user=user,
-    )
-    if obj_like_check:
-        obj_like_check = obj_like_check.first().vote
-    else:
-        obj_like_check = None
-    return obj_like_check
-
-
-def check_like_dislike_from_queryset(user, queryset):
-    user_ckeck_comments_by_like_dislike = {}
-
-    for query in queryset:
-        query_like_check = check_like_dislike(user, query)
-        if query_like_check:
-            user_ckeck_comments_by_like_dislike[query.id] = query_like_check
-    return user_ckeck_comments_by_like_dislike
-
-
-def check_admin(user):
-    return user.is_superuser
-
-
-@user_passes_test(check_admin)
-def update_raiting_field(request, queryset=None):
-    if queryset:
-        for item in queryset:
-            item.raiting = item.votes.sum_rating()
-            item.save()
-        return "successfully updated"
-    return "function did not get queryset"
+from .check_like_dislike import check_like_dislike, check_like_dislike_from_queryset
+from .update_raiting_fields import update_raiting_field
 
 
 def update_post_raiting(request):
@@ -53,7 +14,7 @@ def update_post_raiting(request):
     return HttpResponse(answer)
 
 
-def update_post_raiting(request):
+def update_comments_raiting(request):
     comments = Comment.objects.all()
     answer = update_raiting_field(request, comments)
     return HttpResponse(answer)

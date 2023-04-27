@@ -101,5 +101,3 @@ class PostListView(ListView):
 # TODO: add search by tags
 # TODO: search by categories
 # TODO: add related posts
-# TODO: rating posts
-# TODO: add authentication and authorization

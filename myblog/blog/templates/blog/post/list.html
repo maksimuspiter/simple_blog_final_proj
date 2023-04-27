@@ -3,6 +3,11 @@
 
 {% block MainContent%}
 
+<div class="d-flex justify-content-center">
+    {% include "base_index/filter.html" %}
+
+  </div>
+
 <header class="masthead" style="background-image: url({% static 'index_static/assets/img/home-bg.jpg' %})"> 
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -15,6 +20,7 @@
         </div>
     </div>
 </header>
+
 
 {% for post in posts%}
     <div class="container px-4 px-lg-5">

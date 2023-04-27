@@ -1,37 +1,23 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.urls import reverse
 from django.views.generic import ListView
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 
 from .models import Post, Comment
 from .forms import CreateCommentAfterPost
-
-from like_dislike.models import LikeDislike
-
-
-def check_like_dislike(user, obj):
-    obj_like_check = LikeDislike.objects.filter(
-        content_type=ContentType.objects.get_for_model(obj),
-        object_id=obj.pk,
-        user=user,
-    )
-    if obj_like_check:
-        obj_like_check = obj_like_check.first().vote
-    else:
-        obj_like_check = None
-    return obj_like_check
+from .check_like_dislike import check_like_dislike, check_like_dislike_from_queryset
+from .update_raiting_fields import update_raiting_field
 
 
-def check_like_dislike_from_queryset(user, queryset):
-    user_ckeck_comments_by_like_dislike = {}
+def update_post_raiting(request):
+    posts = Post.objects.all()
+    answer = update_raiting_field(request, posts)
+    return HttpResponse(answer)
 
-    for query in queryset:
-        query_like_check = check_like_dislike(user, query)
-        if query_like_check:
-            user_ckeck_comments_by_like_dislike[query.id] = query_like_check
-    return user_ckeck_comments_by_like_dislike
+
+def update_comments_raiting(request):
+    comments = Comment.objects.all()
+    answer = update_raiting_field(request, comments)
+    return HttpResponse(answer)
 
 
 def post_detail(request, *args, **kwargs):
@@ -47,6 +33,10 @@ def post_detail(request, *args, **kwargs):
         user_ckeck_comments_by_like_dislike = check_like_dislike_from_queryset(
             request.user.portfolio, comments
         )
+
+        # Used union template (blog/post/includes/post_like_dislike.html)
+        # for detail and list
+        user_ckeck_posts_by_like_dislike = {post.pk: post_like_check}
 
         if request.method == "POST":
             form = CreateCommentAfterPost(request.POST)
@@ -66,30 +56,44 @@ def post_detail(request, *args, **kwargs):
             "post": post,
             "comments": comments,
             "form": form,
-            "post_like_check": post_like_check,
+            "user_ckeck_posts_by_like_dislike": user_ckeck_posts_by_like_dislike,
             "user_ckeck_comments_by_like_dislike": user_ckeck_comments_by_like_dislike,
         },
     )
 
 
 class PostListView(ListView):
-    paginate_by = 2
+    paginate_by = 3
     template_name = "blog/post/list.html"
     context_object_name = "posts"
 
-    def get_queryset(self):
-        author = self.kwargs.get("author_nickname", None)
-        if author:
-            return Post.published.filter(author__nickname=author)
+    def get_queryset(self, **kwargs):
+        queriset = Post.objects.all()
+        author = self.request.GET.get("author_nickname", None)
         category_slug = self.kwargs.get("category_slug", None)
-        if category_slug:
-            return Post.published.filter(category__slug=category_slug)
+        order = self.request.GET.get("order_by", None)
 
-        return Post.published.all()
+        if author:
+            queriset = queriset.filter(author__nickname=author)
+        if category_slug:
+            queriset = queriset.filter(category__slug=category_slug)
+        if order:
+            match order:
+                case "hot":
+                    queriset = queriset.order_by("-updated", "-raiting")
+                case "best":
+                    print(queriset)
+                    queriset = queriset.order_by("-raiting")
+                case "new":
+                    queriset = queriset.order_by("-updated")
+
+        return queriset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_ckeck_posts_by_like_dislike = None
+        queriset = Post.objects.all()
+
         if self.request.user.is_authenticated:
             user_ckeck_posts_by_like_dislike = check_like_dislike_from_queryset(
                 self.request.user.portfolio, self.get_queryset()

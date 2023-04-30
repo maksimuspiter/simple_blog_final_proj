@@ -18,7 +18,7 @@ class VotesView(View):
     vote_type = None  # Тип комментария Like/Dislike
 
     def post(self, request, pk):
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
         obj = self.model.objects.get(pk=pk)
         # GenericForeignKey не поддерживает метод get_or_create
@@ -40,7 +40,6 @@ class VotesView(View):
             result = True
 
         if is_ajax:
-
             return HttpResponse(
                 json.dumps(
                     {
@@ -57,14 +56,4 @@ class VotesView(View):
             return redirect(next)
 
 
-"""
-return redirect(request.META.get('HTTP_REFERER'))
-
-
-<form method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <input type="hidden" name="next" value="{{ request.path }}">
-    <button type="submit">Let's Go</button>
-</form>
-"""
+# TODO: refactor HttpResponse so many queries

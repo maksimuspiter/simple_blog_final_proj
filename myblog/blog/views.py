@@ -105,3 +105,5 @@ class PostListView(ListView):
 # TODO: add search by tags
 # TODO: search by categories
 # TODO: add related posts
+
+#TODO: refactor like_dislike posts/coments and change raiting

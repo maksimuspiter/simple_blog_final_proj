@@ -9,7 +9,6 @@ def check_admin(user):
 def update_raiting_field(request, queryset=None):
     if queryset:
         for item in queryset:
-            item.raiting = item.votes.sum_rating()
-            item.save()
+            item.update_raiting()
         return "successfully updated"
     return "function did not get queryset"

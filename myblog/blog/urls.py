@@ -21,11 +21,11 @@ urlpatterns = [
         name="single-post",
     ),
     path(
-        "update__allpost_rating/", views.update_post_raiting, name="update_post_rating"
+        "update_all_posts_raiting/", views.update_all_posts_raiting, name="update_all_posts_raiting"
     ),
     path(
-        "update_all_comments_rating/",
-        views.update_comments_raiting,
-        name="update_comments_rating",
+        "update_all_comments_raiting/",
+        views.update_all_comments_raiting,
+        name="update_all_comments_raiting",
     ),
 ]

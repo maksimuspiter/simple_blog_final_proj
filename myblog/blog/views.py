@@ -8,7 +8,7 @@ from .check_like_dislike import check_like_dislike, check_like_dislike_from_quer
 from .update_raiting_fields import update_raiting_field
 
 
-def update_all_post_raiting(request):
+def update_all_posts_raiting(request):
     posts = Post.objects.all()
     answer = update_raiting_field(request, posts)
     return HttpResponse(answer)

@@ -89,6 +89,10 @@ class Post(models.Model):
             ],
         )
 
+    def update_raiting(self):
+        self.raiting = self.votes.sum_rating()
+        self.save
+
 
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -122,6 +126,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Комментарий {self.author.nickname} на пост {self.post}"
+
+    def update_raiting(self):
+        self.raiting = self.votes.sum_rating()
+        self.save
 
 
 # TODO: add post_content_files ('text', 'video', 'image', 'file') Post <- Content

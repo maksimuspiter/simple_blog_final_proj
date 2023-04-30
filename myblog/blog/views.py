@@ -8,13 +8,13 @@ from .check_like_dislike import check_like_dislike, check_like_dislike_from_quer
 from .update_raiting_fields import update_raiting_field
 
 
-def update_post_raiting(request):
+def update_all_post_raiting(request):
     posts = Post.objects.all()
     answer = update_raiting_field(request, posts)
     return HttpResponse(answer)
 
 
-def update_comments_raiting(request):
+def update_all_comments_raiting(request):
     comments = Comment.objects.all()
     answer = update_raiting_field(request, comments)
     return HttpResponse(answer)

@@ -20,9 +20,11 @@ urlpatterns = [
         views.post_detail,
         name="single-post",
     ),
-    path("update_post_rating/", views.update_post_raiting, name="update_post_rating"),
     path(
-        "update_comments_rating/",
+        "update__allpost_rating/", views.update_post_raiting, name="update_post_rating"
+    ),
+    path(
+        "update_all_comments_rating/",
         views.update_comments_raiting,
         name="update_comments_rating",
     ),

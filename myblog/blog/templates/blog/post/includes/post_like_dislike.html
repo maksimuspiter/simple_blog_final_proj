@@ -1,52 +1,65 @@
 {% load blog_extras %}
+{% load static %}
 
 <div class="d-flex justify-content-center text-center">
-  <div class="text-center">
+  <div class="text-center" id="raiting-post-{{post.id}}">
   raiting: {{post.raiting}}
   </div>
-    <div> 
-        <form action="{% url 'like_dislike:post_like' post.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
 
-            <button type="submit" 
-
-            {% if post.id in user_ckeck_posts_by_like_dislike %}
-              {% if user_ckeck_posts_by_like_dislike|get_item:post.id > 0 %}
-                class="btn btn-success"
-              {% else %}
-                class="btn btn-secondary"
-              {% endif %}
-
-            {% else %}
-              class="btn btn-secondary"
-            {% endif %}
-          >
-          like
-        </button> 
-        </form>
-
-    </div>
-    
     <div>
-        <form action="{% url 'like_dislike:post_dislike' post.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" 
-                {% if post.id in user_ckeck_posts_by_like_dislike %}
-                {% if user_ckeck_posts_by_like_dislike|get_item:post.id < 0 %}
-                    class="btn btn-danger"
-                {% else %}
-                    class="btn btn-secondary"
-                {% endif %}
+      <button 
+      
+      {% if post.id in user_ckeck_posts_by_like_dislike %}
+        {% if user_ckeck_posts_by_like_dislike|get_item:post.id > 0 %}
+          class="btn btn-success"
+        {% else %}
+          class="btn btn-secondary"
+        {% endif %}
 
-                {% else %}
-                class="btn btn-secondary"
-                {% endif %}
-            >
-            dislike
-            </button> 
-        </form> 
+      {% else %}
+        class="btn btn-secondary"
+    {% endif %}
+      
+      
+      id="add_like">Like</button>
+    </div>
+    <div>
+      <button 
+      {% if post.id in user_ckeck_posts_by_like_dislike %}
+        {% if user_ckeck_posts_by_like_dislike|get_item:post.id < 0 %}
+            class="btn btn-danger"
+        {% else %}
+            class="btn btn-secondary"
+        {% endif %}
+
+      {% else %}
+        class="btn btn-secondary"
+      {% endif %}
+      
+      id="add_dislike">Dislike</button>
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+{% block javascript %}
+
+<script>
+  $(function() {
+
+    const url_like = "{% url 'like_dislike:post_like' post.id %}";
+    const url_dislike = "{% url 'like_dislike:post_dislike' post.id %}";
+    const post_id = "{{post.id}}"
+
+    $("#add_like").on('click', () => {
+      add_like_dislike("like", "add_like", "add_dislike", url_like, post_id);
+    });    
+    $("#add_dislike").on('click', () => {
+      add_like_dislike("dislike", "add_dislike", "add_like", url_dislike, post_id);
+    });
+
+  });
+</script>
+{% endblock %}
+<script src="{% static 'index_static/js/test/test.js' %}"></script>

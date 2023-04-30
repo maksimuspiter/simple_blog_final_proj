@@ -18,6 +18,8 @@ class VotesView(View):
     vote_type = None  # Тип комментария Like/Dislike
 
     def post(self, request, pk):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
         obj = self.model.objects.get(pk=pk)
         # GenericForeignKey не поддерживает метод get_or_create
         try:
@@ -37,19 +39,22 @@ class VotesView(View):
             obj.votes.create(user=request.user.portfolio, vote=self.vote_type)
             result = True
 
-        # return HttpResponse(
-        #     json.dumps(
-        #         {
-        #             "result": result,
-        #             "like_count": obj.votes.likes().count(),
-        #             "dislike_count": obj.votes.dislikes().count(),
-        #             "sum_rating": obj.votes.sum_rating(),
-        #         }
-        #     ),
-        #     content_type="application/json",
-        # )
-        next = request.POST.get("next", "/")
-        return redirect(next)
+        if is_ajax:
+
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "result": result,
+                        "like_count": obj.votes.likes().count(),
+                        "dislike_count": obj.votes.dislikes().count(),
+                        "sum_rating": obj.votes.sum_rating(),
+                    }
+                ),
+                content_type="application/json",
+            )
+        else:
+            next = request.POST.get("next", "/")
+            return redirect(next)
 
 
 """

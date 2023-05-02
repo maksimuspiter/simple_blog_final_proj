@@ -29,7 +29,7 @@ function add_like_dislike(action, btn_pressed_id, btn_other_id, url, post_id) {
       btn_class_active = "btn btn-danger";
       break;
     default:
-      console.log("error: unknown action");
+      throw new Error("Invalide Parameter,  unknown action");
   }
 
   $.ajax({

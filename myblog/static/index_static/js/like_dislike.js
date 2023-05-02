@@ -19,7 +19,7 @@ function add_like_dislike(action, btn_pressed_id, btn_other_id, url, post_id) {
   let btn_press = document.getElementById(btn_pressed_id);
   let btn_other = document.getElementById(btn_other_id);
   let raiting = document.getElementById("raiting-post-" + post_id);
-  const raiting_int =  Number(raiting.innerHTML)
+  const raiting_int = Number(raiting.innerHTML);
 
   switch (action) {
     case "like":
@@ -45,7 +45,6 @@ function add_like_dislike(action, btn_pressed_id, btn_other_id, url, post_id) {
       console.log(data);
 
       btn_other.classList = "btn btn-secondary";
-        // raiting.innerHTML = raiting_int + 1;
 
       if (result) {
         btn_press.classList = btn_class_active;
@@ -58,7 +57,6 @@ function add_like_dislike(action, btn_pressed_id, btn_other_id, url, post_id) {
             raiting.innerHTML = raiting_int - 1;
             break;
         }
-
       } else {
         btn_press.classList = "btn btn-secondary";
         switch (action) {

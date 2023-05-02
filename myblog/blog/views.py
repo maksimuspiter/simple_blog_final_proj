@@ -71,14 +71,14 @@ class PostListView(ListView):
         queriset = Post.objects.all()
         author = self.request.GET.get("author_nickname", None)
         category_slug = self.kwargs.get("category_slug", None)
-        order = self.request.GET.get("order_by", None)
+        sorting = self.request.GET.get("order_by", None)
 
         if author:
             queriset = queriset.filter(author__nickname=author)
         if category_slug:
             queriset = queriset.filter(category__slug=category_slug)
-        if order:
-            match order:
+        if sorting:
+            match sorting:
                 case "hot":
                     queriset = queriset.order_by("-updated", "-raiting")
                 case "best":
@@ -92,7 +92,6 @@ class PostListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_ckeck_posts_by_like_dislike = None
-        queriset = Post.objects.all()
 
         if self.request.user.is_authenticated:
             user_ckeck_posts_by_like_dislike = check_like_dislike_from_queryset(
@@ -106,4 +105,4 @@ class PostListView(ListView):
 # TODO: search by categories
 # TODO: add related posts
 
-#TODO: refactor like_dislike posts/coments and change raiting
+# TODO: refactor like_dislike posts/coments and change raiting

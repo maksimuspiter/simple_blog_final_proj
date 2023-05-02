@@ -1,7 +1,6 @@
 import json
 
-from django.shortcuts import render, redirect
-
+from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.views import View
 from django.views.decorators.http import require_http_methods
@@ -11,8 +10,6 @@ from django.contrib.contenttypes.models import ContentType
 from .models import LikeDislike
 
 
-# @require_http_methods(["POST"])
-# @login_required
 class VotesView(View):
     model = None  # Модель данных - Post или Comment
     vote_type = None  # Тип комментария Like/Dislike
@@ -44,9 +41,6 @@ class VotesView(View):
                 json.dumps(
                     {
                         "result": result,
-                        "like_count": obj.votes.likes().count(),
-                        "dislike_count": obj.votes.dislikes().count(),
-                        "sum_rating": obj.votes.sum_rating(),
                     }
                 ),
                 content_type="application/json",
@@ -54,6 +48,3 @@ class VotesView(View):
         else:
             next = request.POST.get("next", "/")
             return redirect(next)
-
-
-# TODO: refactor HttpResponse so many queries

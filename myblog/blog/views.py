@@ -21,8 +21,9 @@ def update_all_comments_raiting(request):
 
 
 def post_detail(request, *args, **kwargs):
-    post = get_object_or_404(Post.published, slug=kwargs["slug"], pk=kwargs["pk"])
-    comments = post.comments.all().filter(active=True)
+    post = get_object_or_404(Post.published
+                             .select_related("author"), slug=kwargs["slug"], pk=kwargs["pk"])
+    comments = post.comments.all().filter(active=True).select_related("author")
 
     form = None
     post_like_check = None
@@ -34,8 +35,6 @@ def post_detail(request, *args, **kwargs):
             request.user.portfolio, comments
         )
 
-        # Used union template (blog/post/includes/post_like_dislike.html)
-        # for detail and list
         user_ckeck_posts_by_like_dislike = {post.pk: post_like_check}
 
         if request.method == "POST":

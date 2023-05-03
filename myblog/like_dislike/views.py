@@ -20,6 +20,7 @@ class VotesView(View):
     def post(self, request, pk):
         is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
+        change_raiting = 0
         obj = self.model.objects.get(pk=pk)
         # GenericForeignKey не поддерживает метод get_or_create
         try:
@@ -32,21 +33,22 @@ class VotesView(View):
                 likedislike.vote = self.vote_type
                 likedislike.save(update_fields=["vote"])
                 result = True
+                change_raiting = 2 * self.vote_type
             else:
+                change_raiting = -self.vote_type
                 likedislike.delete()
                 result = False
         except LikeDislike.DoesNotExist:
             obj.votes.create(user=request.user.portfolio, vote=self.vote_type)
             result = True
+            change_raiting = self.vote_type
 
         if is_ajax:
             return HttpResponse(
                 json.dumps(
                     {
                         "result": result,
-                        "like_count": obj.votes.likes().count(),
-                        "dislike_count": obj.votes.dislikes().count(),
-                        "sum_rating": obj.votes.sum_rating(),
+                        "change_raiting": change_raiting,
                     }
                 ),
                 content_type="application/json",

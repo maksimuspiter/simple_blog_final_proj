@@ -37,54 +37,52 @@
 
                 
                   <div class="d-flex align-items-center flex-column">
-                    <form action="{% url 'like_dislike:comment_like' comment.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" 
-                            {% if comment.id in user_ckeck_comments_by_like_dislike %}
-                              {% if user_ckeck_comments_by_like_dislike|get_item:comment.id > 0 %}
-                                class="btn btn-success"
-                              {% else %}
-                                class="btn btn-outline-success"
-                              {% endif %}
 
-                            {% else %}
-                              class="btn btn-outline-success"
-                            {% endif %}
-                          >+</button> 
-                    </form> 
-                    <div>{{comment.raiting}}</div>
-                    <form action="{% url 'like_dislike:comment_dislike' comment.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" 
-                          {% if comment.id in user_ckeck_comments_by_like_dislike %}
-                            {% if user_ckeck_comments_by_like_dislike|get_item:comment.id < 0 %}
-                              class="btn btn-danger"
-                            {% else %}
-                              class="btn btn-outline-danger"
-                            {% endif %}
+                    <div>
+                      <div class="text-center" >
 
-                          {% else %}
-                            class="btn btn-outline-danger"
-                          {% endif %}
-                        >-</button> 
-                    </form> 
+                        raiting: <span id="raiting-comment-{{comment.id}}">{{comment.raiting}}</span>
+                        </div>
+                      <button 
+                      
+                      {% if comment.id in user_ckeck_comments_by_like_dislike %}
+                        {% if user_ckeck_comments_by_like_dislike|get_item:comment.id > 0 %}
+                          class="btn btn-success"
+                        {% else %}
+                          class="btn btn-secondary"
+                        {% endif %}
+                
+                      {% else %}
+                        class="btn btn-secondary"
+                    {% endif %}
+                      
+                      
+                      id="btn-like-comment-{{comment.id}}"
+                      onclick="add_like_dislike('like', 'comment', '{{comment.id}}')"
+                      >Like</button>
+                    </div>
+                    <div>
+                      <button 
+                      {% if comment.id in user_ckeck_comments_by_like_dislike %}
+                        {% if user_ckeck_comments_by_like_dislike|get_item:comment.id < 0 %}
+                            class="btn btn-danger"
+                        {% else %}
+                            class="btn btn-secondary"
+                        {% endif %}
+                
+                      {% else %}
+                        class="btn btn-secondary"
+                      {% endif %}
+                      
+                      id="btn-dislike-comment-{{comment.id}}"
+                      onclick="add_like_dislike('dislike', 'comment', '{{comment.id}}')"
+                      >Dislike</button>
+                    </div>
 
                   </div>
 
 
-                  <!-- <div>
-                    <div class="d-flex align-items-center flex-column">
-                        <button type="button" class="btn btn-success">Success</button>
-                        <button type="button" class="btn btn-outline-success">Success</button>
-                  
-                        456
-                  
-                        <button type="button" class="btn btn-outline-danger">Danger</button>
-                        <button type="button" class="btn btn-danger">Danger</button>
-                    </div>
-                  </div> -->
+
 
 
               </div>

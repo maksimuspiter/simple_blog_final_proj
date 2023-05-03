@@ -2,10 +2,9 @@
 {% load static %}
 
 <div class="d-flex justify-content-center text-center">
-  <div class="text-center" id="raiting-post-{{post.id}}">
-  raiting: {{post.raiting}}
+  <div class="text-center" >
+  raiting: <span id="raiting-post-{{post.id}}">{{post.raiting}}</span>
   </div>
-
     <div>
       <button 
       
@@ -20,8 +19,9 @@
         class="btn btn-secondary"
     {% endif %}
       
-      
-      id="add_like">Like</button>
+      id="btn-like-post-{{post.id}}"
+      onclick="add_like_dislike('like', 'post', '{{post.id}}')"
+      >Like</button>
     </div>
     <div>
       <button 
@@ -36,30 +36,9 @@
         class="btn btn-secondary"
       {% endif %}
       
-      id="add_dislike">Dislike</button>
+      id="btn-dislike-post-{{post.id}}"
+      onclick="add_like_dislike('dislike', 'post', '{{post.id}}')"
+      >Dislike</button>
     </div>
 </div>
 
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-{% block javascript %}
-
-<script>
-  $(function() {
-
-    const url_like = "{% url 'like_dislike:post_like' post.id %}";
-    const url_dislike = "{% url 'like_dislike:post_dislike' post.id %}";
-    const post_id = "{{post.id}}"
-
-    $("#add_like").on('click', () => {
-      add_like_dislike("like", "add_like", "add_dislike", url_like, post_id);
-    });    
-    $("#add_dislike").on('click', () => {
-      add_like_dislike("dislike", "add_dislike", "add_like", url_dislike, post_id);
-    });
-
-  });
-</script>
-{% endblock %}
-<script src="{% static 'index_static/js/test/test.js' %}"></script>

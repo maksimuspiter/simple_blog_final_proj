@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.urls import reverse
 from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Comment
 from .forms import CreateCommentAfterPost
@@ -19,7 +20,7 @@ def update_all_comments_raiting(request):
     answer = update_raiting_field(request, comments)
     return HttpResponse(answer)
 
-
+@login_required
 def post_detail(request, *args, **kwargs):
     post = get_object_or_404(Post.published
                              .select_related("author"), slug=kwargs["slug"], pk=kwargs["pk"])

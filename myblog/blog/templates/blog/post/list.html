@@ -59,8 +59,9 @@
                             <a href="{{tag}}">#{{tag}}</a>
                         {% endfor %}
                     </p>
-                    
-                    {% include "blog/post/includes/post_like_dislike.html" %}
+                    {% if request.user.is_authenticated %}
+                        {% include "blog/post/includes/post_like_dislike.html" %}
+                    {% endif %}
 
 
                     
